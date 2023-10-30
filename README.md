@@ -1,7 +1,7 @@
 # Mikimpe WMS
 
 ## Purpose of this module
-This module has been developed to be paired with https://github.com/mikimpe/SyncWithWMS
+This module has been developed to be paired with https://github.com/mikimpe/SyncWithWMS  
 After installing this module, also install https://github.com/mikimpe/SyncWithWMS and follow the instructions in its README.md to give it a try.
 
 ## Installation
