@@ -9,31 +9,32 @@ use Mikimpe\WMS\Exception\FakeException;
 
 class GetProductQty implements GetProductQtyInterface
 {
+    private RandomError $randomError;
+
+    /**
+     * @param RandomError $randomError
+     */
+    public function __construct(
+        RandomError $randomError
+    ) {
+        $this->randomError = $randomError;
+    }
+
     /**
      * @inheritDoc
      * @throws FakeException
      */
     public function execute(string $sku): int
     {
-        try {
-            $diceRes = $this->throwDice();
-            if ($diceRes < 3) {
-                throw new FakeException(__('Fake Error'));
-            }
+        if ($this->randomError->execute()) {
+            throw new FakeException(__('Fake error from internal WMS'));
+        }
 
+        try {
             return $this->generateProductQty();
         } catch (Exception) {
-            throw new FakeException(__('Fake Error'));
+            throw new FakeException(__('Fake error from internal WMS'));
         }
-    }
-
-    /**
-     * @return int
-     * @throws Exception
-     */
-    private function throwDice(): int
-    {
-        return random_int(1, 6);
     }
 
     /**
