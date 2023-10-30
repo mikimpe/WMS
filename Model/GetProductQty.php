@@ -6,18 +6,23 @@ namespace Mikimpe\WMS\Model;
 use Exception;
 use Mikimpe\WMS\Api\GetProductQtyInterface;
 use Mikimpe\WMS\Exception\FakeException;
+use Psr\Log\LoggerInterface;
 
 class GetProductQty implements GetProductQtyInterface
 {
     private RandomError $randomError;
+    private LoggerInterface $logger;
 
     /**
      * @param RandomError $randomError
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        RandomError $randomError
+        RandomError $randomError,
+        LoggerInterface $logger
     ) {
         $this->randomError = $randomError;
+        $this->logger = $logger;
     }
 
     /**
@@ -27,13 +32,17 @@ class GetProductQty implements GetProductQtyInterface
     public function execute(string $sku): int
     {
         if ($this->randomError->execute()) {
-            throw new FakeException(__('Fake error from internal WMS'));
+            $msg = __('Fake error from internal WMS');
+            $this->logger->error($msg);
+            throw new FakeException($msg);
         }
 
         try {
             return $this->generateProductQty();
         } catch (Exception) {
-            throw new FakeException(__('Fake error from internal WMS'));
+            $msg = __('Fake error from internal WMS');
+            $this->logger->error($msg);
+            throw new FakeException($msg);
         }
     }
 
